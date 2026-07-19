@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: test (nvim ${{ matrix.neovim }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Cover the declared floor (0.10) up through nightly.
+        neovim: [v0.10.0, v0.11.0, stable, nightly]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neovim ${{ matrix.neovim }}
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim }}
+
+      - name: Show version
+        run: nvim --version | head -1
+
+      - name: Run version tests
+        run: nvim --headless -l tests/version_spec.lua
+
+      - name: Smoke-load all modules and the command
+        run: |
+          nvim --headless -u NONE -i NONE --cmd "set rtp+=$PWD" \
+            -c "runtime plugin/ghrelease.lua" \
+            -c "lua require('ghrelease.prompt'); require('ghrelease.gh'); require('ghrelease.flow')" \
+            -c "lua assert(vim.fn.exists(':GhRelease') == 2, ':GhRelease not registered')" \
+            -c "lua print('load OK on ' .. tostring(vim.version()))" \
+            -c "qa"

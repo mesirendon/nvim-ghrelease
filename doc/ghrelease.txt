@@ -1,0 +1,88 @@
+*ghrelease.txt*        Interactive GitHub Release creation via the gh CLI
+
+==============================================================================
+CONTENTS                                                     *ghrelease-contents*
+
+  1. Introduction ........................... |ghrelease-introduction|
+  2. Requirements ........................... |ghrelease-requirements|
+  3. Usage .................................. |ghrelease-usage|
+  4. Flow ................................... |ghrelease-flow|
+  5. Keymaps ................................ |ghrelease-keymaps|
+  6. Configuration .......................... |ghrelease-config|
+
+==============================================================================
+1. INTRODUCTION                                          *ghrelease-introduction*
+
+nvim-ghrelease drives `gh release create` from inside Neovim. It lists your
+existing releases, suggests the next semantic version, and asks each question
+the gh CLI asks. Free-text answers (tag, title, notes) open in a dedicated
+buffer; save and close (`:wq`) to advance to the next step.
+
+==============================================================================
+2. REQUIREMENTS                                          *ghrelease-requirements*
+
+  - Neovim 0.10+ (uses |vim.system()|).
+  - The GitHub CLI `gh`, installed and authenticated (`gh auth login`).
+  - Run the command from within a GitHub repository.
+
+==============================================================================
+3. USAGE                                                        *ghrelease-usage*
+
+                                                                    *:GhRelease*
+:GhRelease        Start the interactive release-creation flow.
+
+Lua API: >lua
+    require("ghrelease").setup()   -- optional
+    require("ghrelease").create()  -- same as :GhRelease
+<
+==============================================================================
+4. FLOW                                                          *ghrelease-flow*
+
+  1. Preflight: checks gh, auth, and repository.
+  2. Shows existing releases (press <CR>/q/<Esc> to continue).
+  3. Version menu: major / minor / patch / prerelease / custom.
+  4. Tag buffer (pre-filled with the suggestion) — edit, then :wq.
+  5. Title buffer.
+  6. Notes source: own / generated template / commit-log template / blank.
+  7. Notes buffer (pre-filled per source), unless blank.
+  8. Prerelease? yes/no.
+  9. Submit: Publish release / Save as draft / Cancel.
+ 10. Runs `gh release create` and reports the release URL.
+
+In any editing buffer, `:wq` accepts and continues; `:q` keeps what is shown.
+
+==============================================================================
+5. KEYMAPS                                                   *ghrelease-keymaps*
+
+setup() installs one default keymap (in the <leader>g git family):
+
+    <leader>gr        Create a GitHub release (:GhRelease)
+
+Override or disable via the `keymaps` option. Each entry is an action name
+mapped to a normal-mode lhs, or false to skip it: >lua
+    require("ghrelease").setup({
+      keymaps = { create = "<leader>oR" }, -- remap
+    })
+
+    require("ghrelease").setup({ keymaps = { create = false } }) -- disable one
+    require("ghrelease").setup({ keymaps = false })              -- disable all
+<
+Note: default keymaps are installed by setup(), so the plugin must be loaded for
+them to exist. With lazy.nvim, load on `event = "VeryLazy"` (or use lazy's own
+`keys`) rather than lazy-loading solely on the command.
+
+==============================================================================
+6. CONFIGURATION                                              *ghrelease-config*
+
+Defaults (pass overrides to |setup()|): >lua
+    require("ghrelease").setup({
+      list_limit   = 30,       -- releases shown in the context view
+      default_bump = "patch",  -- highlighted first in the version menu
+      tag_prefix   = "v",      -- prefix for suggested first tag
+      first_tag    = "v0.1.0", -- seed tag when no releases exist
+      win          = "float",  -- "float" | "split" | "vsplit"
+      height       = 12,       -- editing buffer height / float rows
+      keymaps      = { create = "<leader>gr" }, -- false disables all
+    })
+<
+ vim:tw=78:ts=8:ft=help:norl:
