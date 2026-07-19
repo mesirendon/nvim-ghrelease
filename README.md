@@ -10,6 +10,8 @@ Free-text answers (tag, title, release notes) open in a dedicated **buffer per s
 edit, then `:wq` to move to the next question. When every answer is collected it runs
 `gh release create` and reports the new release URL.
 
+https://github.com/user-attachments/assets/47dda2ee-c6a8-4229-8cee-7135bb7712a5
+
 ## Features
 
 - Lists current releases for context before you start.
