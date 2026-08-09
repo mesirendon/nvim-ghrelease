@@ -7,14 +7,14 @@ local M = {}
 --- works without calling setup(), but default keymaps require it.
 --- @param opts table|nil
 function M.setup(opts)
-  config.setup(opts)
-  require("ghrelease.keymaps").apply(config.options.keymaps)
-  return M
+	config.setup(opts)
+	require("ghrelease.keymaps").apply(config.options.keymaps)
+	return M
 end
 
 --- Start the interactive release-creation flow.
 function M.create()
-  require("ghrelease.flow").run()
+	require("ghrelease.flow").run()
 end
 
 return M

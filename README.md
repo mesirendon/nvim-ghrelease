@@ -17,6 +17,7 @@ https://github.com/user-attachments/assets/47dda2ee-c6a8-4229-8cee-7135bb7712a5
 - Lists current releases for context before you start.
 - Suggests the next version with a semver bump menu (`major` / `minor` / `patch` / `prerelease` / `custom`).
 - Buffer-per-step editing: `:wq` saves the answer and advances.
+- Tag collision detection: if the entered tag already has a release, choose to retry with another tag, overwrite the existing release, or cancel — instead of failing after you've already written notes.
 - Release-notes sources mirroring gh: write your own, GitHub-generated template, commit-log template, or leave blank.
 - Final `Publish / Save as draft / Cancel` step, plus a prerelease question.
 - Fully async (`vim.system`), no blocking of the editor.
@@ -98,7 +99,9 @@ Then follow the steps:
 
 1. **Existing releases** are shown — press `<CR>`, `q`, or `<Esc>` to continue.
 2. **Version menu** — pick a bump or `custom`.
-3. **Tag** buffer (pre-filled) — edit, `:wq`.
+3. **Tag** buffer (pre-filled) — edit, `:wq`. If a release already exists for that
+   tag, you're asked to retry with another tag, overwrite the existing release, or
+   cancel.
 4. **Title** buffer.
 5. **Notes source** — own / generated / commit-log / blank.
 6. **Notes** buffer (pre-filled per source), unless blank.
@@ -106,6 +109,12 @@ Then follow the steps:
 8. **Submit** — Publish / Save as draft / Cancel.
 
 In any editing buffer, `:wq` accepts and continues; `:q` keeps whatever is shown.
+
+If you chose to overwrite, the flow runs `gh release edit` instead of
+`gh release create`. Otherwise, when the tag already exists locally but has no
+release yet, `--verify-tag` is added to `gh release create` so it refuses to
+create the release unless that tag is also on the remote — protecting you from
+tagging the wrong commit.
 
 ## Keymaps
 
@@ -171,10 +180,10 @@ The choice menus use `vim.ui.select`, so they integrate automatically with
 
 ## Development
 
-Run the pure version-logic tests headlessly:
+Run all specs headlessly (`tests/init.lua` auto-discovers every `tests/*_spec.lua` file):
 
 ```sh
-nvim --headless -l tests/version_spec.lua
+nvim --headless -l tests/init.lua
 ```
 
 ## License

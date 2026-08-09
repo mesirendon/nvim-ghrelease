@@ -26,8 +26,8 @@ jobs:
       - name: Show version
         run: nvim --version | head -1
 
-      - name: Run version tests
-        run: nvim --headless -l tests/version_spec.lua
+      - name: Run tests
+        run: nvim --headless -l tests/init.lua
 
       - name: Smoke-load all modules and the command
         run: |

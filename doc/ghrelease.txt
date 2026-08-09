@@ -42,12 +42,17 @@ Lua API: >lua
   2. Shows existing releases (press <CR>/q/<Esc> to continue).
   3. Version menu: major / minor / patch / prerelease / custom.
   4. Tag buffer (pre-filled with the suggestion) — edit, then :wq.
+     If a release already exists for that tag: retry with another tag,
+     overwrite the existing release, or cancel.
   5. Title buffer.
   6. Notes source: own / generated template / commit-log template / blank.
   7. Notes buffer (pre-filled per source), unless blank.
   8. Prerelease? yes/no.
   9. Submit: Publish release / Save as draft / Cancel.
- 10. Runs `gh release create` and reports the release URL.
+ 10. Runs `gh release create` (or `gh release edit`, if overwriting) and
+     reports the outcome. When the tag exists locally but has no release
+     yet, `--verify-tag` is added so gh refuses to create the release
+     unless that tag also exists on the remote.
 
 In any editing buffer, `:wq` accepts and continues; `:q` keeps what is shown.
 
