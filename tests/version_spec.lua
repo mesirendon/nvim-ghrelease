@@ -1,17 +1,15 @@
--- Headless assertions for the pure version module.
--- Run with:  nvim --headless -l tests/version_spec.lua
 package.path = "./lua/?.lua;./lua/?/init.lua;" .. package.path
 
 local version = require("ghrelease.version")
 
 local failures = 0
 local function eq(got, want, label)
-  if got ~= want then
-    failures = failures + 1
-    io.write(string.format("FAIL  %-28s got=%s want=%s\n", label, tostring(got), tostring(want)))
-  else
-    io.write(string.format("ok    %-28s %s\n", label, tostring(got)))
-  end
+	if got ~= want then
+		failures = failures + 1
+		io.write(string.format("FAIL  %-28s got=%s want=%s\n", label, tostring(got), tostring(want)))
+	else
+		io.write(string.format("ok    %-28s %s\n", label, tostring(got)))
+	end
 end
 
 -- parse ---------------------------------------------------------------------
@@ -35,8 +33,4 @@ eq(#s, 4, "suggest count")
 eq(s[1].kind, "patch", "suggest first kind")
 eq(#version.suggest("garbage"), 0, "suggest invalid -> empty")
 
-if failures > 0 then
-  io.write(string.format("\n%d assertion(s) failed\n", failures))
-  os.exit(1)
-end
-io.write("\nAll assertions passed\n")
+return failures

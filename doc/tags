@@ -1,0 +1,9 @@
+:GhRelease	ghrelease.txt	/*:GhRelease*
+ghrelease-config	ghrelease.txt	/*ghrelease-config*
+ghrelease-contents	ghrelease.txt	/*ghrelease-contents*
+ghrelease-flow	ghrelease.txt	/*ghrelease-flow*
+ghrelease-introduction	ghrelease.txt	/*ghrelease-introduction*
+ghrelease-keymaps	ghrelease.txt	/*ghrelease-keymaps*
+ghrelease-requirements	ghrelease.txt	/*ghrelease-requirements*
+ghrelease-usage	ghrelease.txt	/*ghrelease-usage*
+ghrelease.txt	ghrelease.txt	/*ghrelease.txt*
